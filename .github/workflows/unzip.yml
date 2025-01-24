@@ -1,0 +1,24 @@
+name: Extract ZIP on Push
+
+on:
+  push:
+    paths:
+      - '**.zip'  # Trigger workflow when a ZIP file is pushed
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Extract ZIP files
+        run: unzip '*.zip' -d extracted
+
+      - name: Commit extracted files
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add extracted/
+          git commit -m "Extracted ZIP contents"
+          git push
